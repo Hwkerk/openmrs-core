@@ -48,7 +48,7 @@ jobs:
       - name: Install dependencies
         run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true --batch-mode --show-version --file pom.xml
       - name: Build with Maven
-        run: mvn clean install && mvn test -Pskip-default-test -Pintegration-test --batch-mode --file pom.xml
+        run: mvn --batch-mode --update-snapshots verify
       # this is necessary to populate the environment variables for Coveralls properly
       - name: Set branch name and PR number
         id: refs
@@ -61,7 +61,7 @@ jobs:
           echo "::set-output name=pr_number::$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")"
       - name: Send data to Sonar
         # only send sonar data for Java 11
-        if: ${{ matrix.java-version == '11' }}
+        # if: ${{ matrix.java-version == '11' }}
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
